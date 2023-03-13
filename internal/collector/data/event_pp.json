@@ -1,0 +1,29 @@
+{
+    "schema": "iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-4",
+    "data": [
+        {
+            "e": "pp",
+            "url": "http://localhost:1313/",
+            "page": "Mark Wolfe's Blog",
+            "eid": "2c5c2381-bb91-4e1a-88d6-a5ad40b1ac03",
+            "tv": "js-3.8.0",
+            "tna": "snplow5",
+            "aid": "accelerator",
+            "p": "web",
+            "cookie": "1",
+            "cs": "UTF-8",
+            "lang": "en-US",
+            "res": "3440x1440",
+            "cd": "30",
+            "tz": "Australia/Melbourne",
+            "dtm": "1678595411715",
+            "cx": "eyJzY2hlbWEiOiJpZ2x1OmNvbS5zbm93cGxvd2FuYWx5dGljcy5zbm93cGxvdy9jb250ZXh0cy9qc29uc2NoZW1hLzEtMC0wIiwiZGF0YSI6W3sic2NoZW1hIjoiaWdsdTpjb20uc25vd3Bsb3dhbmFseXRpY3Muc25vd3Bsb3cvd2ViX3BhZ2UvanNvbnNjaGVtYS8xLTAtMCIsImRhdGEiOnsiaWQiOiI4YTE2YmJiNS0wZDM5LTQ3Y2ItYTY1Yy01N2U2ZDExOWY5ZTcifX1dfQ",
+            "vp": "1720x584",
+            "ds": "1705x2376",
+            "vid": "2",
+            "sid": "af0c31db-58c0-475d-a83c-fef1ddcba8e9",
+            "duid": "c69a3688-76c1-4138-8b0a-a74a8083c52f",
+            "stm": "1678595411719"
+        }
+    ]
+}
