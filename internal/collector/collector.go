@@ -16,6 +16,8 @@ import (
 
 const (
 	collectorPayloadSchema = "iglu:au.id.wolfe.snowplow/CollectorPayload/jsonschema/1-0-0"
+
+	payloadLimit = 100000
 )
 
 type Params struct {
@@ -30,6 +32,13 @@ func GetHandler(p Params) echo.HandlerFunc {
 	}
 }
 
+// PostHandler handles incoming Snowplow collector payloads and sends them to
+// Amazon Kinesis Firehose.
+//
+// p - Handler parameters
+//
+// Returns an HTTP 200 response with an "ok" message on success, or an error if
+// the payload is invalid or failed to send.
 func PostHandler(p Params) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
@@ -47,9 +56,7 @@ func PostHandler(p Params) echo.HandlerFunc {
 		if valid {
 			res, err := p.FirehoseSvc.PutRecord(ctx, &firehose.PutRecordInput{
 				DeliveryStreamName: aws.String(p.Flags.FirehoseStreamName),
-				Record: &types.Record{
-					Data: data,
-				},
+				Record:             &types.Record{Data: data},
 			})
 			if err != nil {
 				return err

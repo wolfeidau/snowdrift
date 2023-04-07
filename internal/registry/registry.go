@@ -19,6 +19,13 @@ func NewSchemaStore() *SchemaStore {
 	return &SchemaStore{cache: make(map[string]*jsonschema.Schema)}
 }
 
+// Validate validates a JSON payload against a schema.
+//
+// ctx - The context for the operation. Currently unused.
+// schema - The schema ID (e.g. "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0")
+// raw - The raw JSON payload bytes to validate.
+//
+// Returns an error if the payload is invalid against the schema, or nil if valid.
 func (ss *SchemaStore) Validate(ctx context.Context, schema string, raw []byte) error {
 	schemaPath := strings.TrimLeft(schema, "iglu:")
 
