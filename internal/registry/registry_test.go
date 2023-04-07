@@ -18,3 +18,15 @@ func TestPageView(t *testing.T) {
 	err := ss.Validate(context.TODO(), "com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-4", jsonData)
 	assert.NoError(err)
 }
+
+func TestNewSchemaStore(t *testing.T) {
+	ss := NewSchemaStore()
+
+	if ss.cache == nil {
+		t.Error("SchemaStore cache is nil")
+	}
+
+	if len(ss.cache) != 0 {
+		t.Error("SchemaStore cache is not empty")
+	}
+}

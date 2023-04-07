@@ -2,9 +2,13 @@ APPNAME := snowdrift-collector
 STAGE ?= dev
 BRANCH ?= master
 
-.PHONY: build-collector
-build-collector:
-	GOOS=linux GOARCH=arm64 go build -ldflags '-d -s -w' -a -tags netgo -installsuffix netgo -o build/bin/bootstrap ./cmd/snowplow-collector/
+.PHONY: clean
+clean:
+	rm -rf ./build
+
+.PHONY: build
+build:
+	GOOS=linux GOARCH=arm64 go build -ldflags '-d -s -w' -a -tags netgo -installsuffix netgo -o build/snowplow-collector/bootstrap ./cmd/snowplow-collector/
 
 .PHONY: scan
 scan:

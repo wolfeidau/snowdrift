@@ -134,8 +134,8 @@ resource "aws_kinesis_firehose_delivery_stream" "snowplow" {
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_file = "../build/bin/bootstrap"
-  output_path = "../build/bin/bootstrap.zip"
+  source_file = "../build/snowplow-collector/bootstrap"
+  output_path = "../build/snowplow-collector/bootstrap.zip"
 }
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
