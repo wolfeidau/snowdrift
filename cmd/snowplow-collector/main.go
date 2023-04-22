@@ -13,12 +13,13 @@ import (
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	middleware "github.com/wolfeidau/echo-middleware"
+	wmiddleware "github.com/wolfeidau/echo-middleware"
 	"github.com/wolfeidau/lambda-go-extras/lambdaextras"
 	lmw "github.com/wolfeidau/lambda-go-extras/middleware"
 	"github.com/wolfeidau/lambda-go-extras/standard"
 	"github.com/wolfeidau/snowdrift/internal/collector"
 	"github.com/wolfeidau/snowdrift/internal/flags"
+	"github.com/wolfeidau/snowdrift/internal/middleware"
 	"github.com/wolfeidau/snowdrift/internal/registry"
 )
 
@@ -71,22 +72,38 @@ func main() {
 func container(e *echo.Echo, flds lmw.FieldMap) {
 	e.Logger.SetOutput(io.Discard)
 
-	e.Use(middleware.ZeroLogWithConfig(
-		middleware.ZeroLogConfig{
+	e.Use(wmiddleware.ZeroLogWithConfig(
+		wmiddleware.ZeroLogConfig{
 			Fields: flds,
-			Level:  zerolog.InfoLevel,
+			Level:  zerolog.DebugLevel,
 		},
 	))
 
-	e.Use(middleware.ZeroLogRequestLog())
+	e.Use(wmiddleware.ZeroLogRequestLog())
 	e.Use(echomiddleware.Gzip())
 
-	log.Fatal().Str("hosting", cli.Hosting).Msg("starting http listener")
+	e.Use(middleware.Identity(middleware.IdentityConfig{
+		Name:     "_c3p0",
+		SameSite: http.SameSiteLaxMode,
+		TTLDays:  30,
+		Path:     "/",
+		Domain:   "localhost",
+	}))
+
+	log.Info().Str("hosting", cli.Hosting).Msg("starting http listener")
 
 	log.Fatal().Err(e.Start(":3333")).Msg("listener failed")
 }
 
 func serverless(e *echo.Echo, flds lmw.FieldMap) {
+
+	e.Use(middleware.Identity(middleware.IdentityConfig{
+		Name:     "_c3p0",
+		SameSite: http.SameSiteLaxMode,
+		TTLDays:  30,
+		Path:     "/",
+		Domain:   "example.com",
+	}))
 
 	h := lambdaextras.GenericHandler(httpadapter.NewV2(e.Server.Handler).ProxyWithContext)
 

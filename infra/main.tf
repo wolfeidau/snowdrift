@@ -79,6 +79,15 @@ data "aws_iam_policy_document" "firehose_assume_role" {
     }
 
     actions = ["sts:AssumeRole"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "sts:ExternalId"
+
+      values = [
+        "${data.aws_caller_identity.current.account_id}",
+      ]
+    }
   }
 }
 
@@ -117,6 +126,11 @@ resource "aws_kinesis_firehose_delivery_stream" "snowplow" {
   name        = "${local.app_id}-stream"
   destination = "extended_s3"
 
+  server_side_encryption {
+    enabled  = true
+    key_type = "AWS_OWNED_CMK"
+  }
+
   extended_s3_configuration {
     role_arn            = aws_iam_role.firehose.arn
     bucket_arn          = aws_s3_bucket.events.arn
@@ -143,7 +157,7 @@ resource "aws_cloudwatch_log_group" "lambda_log_group" {
   retention_in_days = 7
 }
 
-data "aws_iam_policy_document" "assume_lambda_role" {
+data "aws_iam_policy_document" "snowdrift_lambda_role" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -184,7 +198,7 @@ data "aws_iam_policy_document" "allow_lambda_firehose" {
 
 resource "aws_iam_role" "lambda_role" {
   name               = "${local.app_id}-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_lambda_role.json
+  assume_role_policy = data.aws_iam_policy_document.snowdrift_lambda_role.json
 
   inline_policy {
     name = "logs"
