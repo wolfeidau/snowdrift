@@ -8,6 +8,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.18.20
 	github.com/aws/aws-sdk-go-v2/service/firehose v1.16.9
 	github.com/awslabs/aws-lambda-go-api-proxy v0.14.0
+	github.com/google/uuid v1.3.0
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/qri-io/jsonschema v0.2.1
 	github.com/rs/zerolog v1.29.0

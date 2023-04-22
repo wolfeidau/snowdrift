@@ -10,6 +10,10 @@ clean:
 build:
 	GOOS=linux GOARCH=arm64 go build -ldflags '-d -s -w' -a -tags netgo -installsuffix netgo -o build/snowplow-collector/bootstrap ./cmd/snowplow-collector/
 
+.PHONY: test
+test:
+	go test -cover -v ./...
+
 .PHONY: scan
 scan:
 	@trivy config --severity HIGH,CRITICAL .

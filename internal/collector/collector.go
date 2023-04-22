@@ -16,8 +16,6 @@ import (
 
 const (
 	collectorPayloadSchema = "iglu:au.id.wolfe.snowplow/CollectorPayload/jsonschema/1-0-0"
-
-	payloadLimit = 100000
 )
 
 type Params struct {
@@ -43,7 +41,10 @@ func PostHandler(p Params) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 
-		data, err := io.ReadAll(c.Request().Body)
+		// limit the analytics payload to limit the impact of abuse or denial of service
+		lr := io.LimitReader(c.Request().Body, p.Flags.PayloadLimit)
+
+		data, err := io.ReadAll(lr)
 		if err != nil {
 			return err
 		}
@@ -91,7 +92,10 @@ func loadAndValidatePayload(ctx context.Context, ss *registry.SchemaStore, raw [
 	// validate the inner payload
 	err = ss.Validate(ctx, scp.Schema, scp.Data)
 	if err != nil {
-		return false, err
+		log.Ctx(ctx).Error().Err(err).Str("schema", scp.Schema).Msg("failed to validate data")
+
+		// any sort of validation error is ignored as what would the client do about it?
+		return false, nil
 	}
 
 	return true, nil
