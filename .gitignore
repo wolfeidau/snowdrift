@@ -1,2 +1,3 @@
 /infra/.terraform*
 /build
+/coverage.*
